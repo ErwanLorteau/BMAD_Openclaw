@@ -1,100 +1,98 @@
-# BMad Method Core
+# BMad Method × OpenClaw
 
-Trimmed, standalone extraction of the [BMad Method](https://github.com/bmad-method/bmad-method) — agent system prompts, workflow definitions, templates, and checklists.
+Implementation of the [BMad Method](https://github.com/bmadcode/BMAD-METHOD) for AI-driven software development, adapted for [OpenClaw](https://github.com/openclaw/openclaw) agent orchestration via `sessions_spawn`.
 
-**No IDE integrations. No CLI tooling. No website. Just the methodology.**
+## Branches
 
-## What This Is
+| Branch | Purpose |
+|--------|---------|
+| **`main`** | Complete implementation — upstream + OpenClaw custom agents |
+| **`master`** | Original v1 release (archived) |
+| **`bmad-method-core`** | Clean upstream BMad v6 reference |
 
-The BMad Method is a multi-agent software development methodology that orchestrates specialized AI agents through a structured workflow: Analysis → Planning → Solutioning → Implementation.
-
-This repo isolates the **core methodology** so each agent prompt can be used directly as a system prompt in any AI tool, agent framework, or orchestration system.
-
-## Directory Structure
-
-```
-bmad-method-core/
-├── agents/                    # Standalone agent system prompts
-│   ├── analyst.md             # Mary 📊 — Business Analyst
-│   ├── architect.md           # Winston 🏗️ — System Architect
-│   ├── bmad-master.md         # BMad Master 🧙 — Orchestrator
-│   ├── developer.md           # Amelia 💻 — Senior Developer
-│   ├── product-manager.md     # John 📋 — Product Manager
-│   ├── qa-engineer.md         # Quinn 🧪 — QA Engineer
-│   ├── quick-flow-solo-dev.md # Barry 🚀 — Quick Flow Dev
-│   ├── scrum-master.md        # Bob 🏃 — Scrum Master
-│   ├── tech-writer.md         # Paige 📚 — Technical Writer
-│   └── ux-designer.md         # Sally 🎨 — UX Designer
-├── workflow/                  # Methodology structure
-│   ├── phases.md              # The 4 phases: Analysis → Planning → Solutioning → Implementation
-│   ├── orchestrator.md        # Master orchestration rules, step-file architecture, routing
-│   └── state-machine.md       # Status transitions, handoff rules, sprint tracking
-├── templates/                 # Output templates (verbatim from official repo)
-│   ├── product-brief.md
-│   ├── prd.md
-│   ├── ux-design.md
-│   ├── architecture-decision.md
-│   ├── epics.md
-│   ├── readiness-report.md
-│   ├── story.md
-│   ├── sprint-status.yaml
-│   ├── tech-spec.md
-│   ├── research.md
-│   ├── project-context.md
-│   ├── brainstorming-session.md
-│   └── doc-*.md               # Documentation templates
-├── checklists/                # Validation checklists (verbatim from official repo)
-│   ├── code-review.md
-│   ├── correct-course.md
-│   ├── create-story.md
-│   ├── dev-story.md
-│   ├── sprint-planning.md
-│   ├── qa-automate.md
-│   └── document-project.md
-└── README.md
-```
-
-## How to Use
-
-### As System Prompts
-
-Each file in `agents/` is a complete, standalone system prompt. Copy the contents and use as a system prompt for any AI model:
+## Structure
 
 ```
-# Example: spawn a Product Manager agent
-system_prompt = open("agents/product-manager.md").read()
+agents/                 # 10 upstream BMad agents (official personas)
+├── analyst.md                # Mary — business analysis & research
+├── architect.md              # Winston — system architecture
+├── bmad-master.md            # Orchestrator — routes tasks to agents
+├── developer.md              # James — implementation
+├── product-manager.md        # John — product strategy
+├── qa-engineer.md            # Quinn — quality assurance
+├── quick-flow-solo-dev.md    # Barry — rapid solo development
+├── scrum-master.md           # Bob — sprint planning & epics
+├── tech-writer.md            # Paige — documentation
+└── ux-designer.md            # Sally — UX design
+
+agents-openclaw/        # 11 custom execution agents (OpenClaw additions)
+├── business-analyst.md       # Requirements & specs
+├── code-review.md            # Senior dev review
+├── correct-course.md         # Course correction
+├── create-story.md           # Story creation from epics
+├── dev-story.md              # Story development execution
+├── product-owner.md          # Product ownership & priorities
+├── qa-tester.md              # Test execution
+├── readiness-check.md        # Implementation readiness validation
+├── retrospective.md          # Sprint retrospective
+├── sprint-status.md          # Sprint status tracking
+└── ux-review.md              # UX review validation
+
+templates/              # 17 document templates
+├── architecture-decision.md
+├── brainstorming-session.md
+├── doc-deep-dive.md
+├── doc-index.md
+├── doc-project-overview.md
+├── doc-source-tree.md
+├── epics.md
+├── prd.md
+├── product-brief.md
+├── project-brainstorming-context.md
+├── project-context.md
+├── readiness-report.md
+├── research.md
+├── sprint-status.yaml
+├── story.md
+├── tech-spec.md
+└── ux-design.md
+
+checklists/             # 7 validation checklists
+├── code-review.md
+├── correct-course.md
+├── create-story.md
+├── dev-story.md
+├── document-project.md
+├── qa-automate.md
+└── sprint-planning.md
+
+workflow/               # Orchestration & process
+├── orchestrator.md           # Agent routing & task delegation
+├── phases.md                 # Development phases & transitions
+└── state-machine.md          # Workflow state machine
 ```
 
-### Workflow Phases
+## Workflow
 
-Read `workflow/phases.md` to understand the full development lifecycle:
+```
+Idea → Product Brief → PRD → Architecture → UX Design → Epics & Stories
+  → Readiness Check → [Dev Story → Code Review → QA] → Retrospective
+```
 
-1. **Analysis** (Analyst) — Research, brainstorming, product brief
-2. **Planning** (PM, UX Designer) — PRD creation, UX design specification
-3. **Solutioning** (Architect, PM) — Architecture decisions, epic/story breakdown, readiness check
-4. **Implementation** (Scrum Master, Developer, QA) — Sprint planning, story development, code review
-5. **Quick Flow** (Solo Dev) — Alternative rapid path for smaller tasks
+**Planning** (`agents/`): product-manager, analyst, architect, ux-designer, scrum-master
+**Execution** (`agents-openclaw/`): create-story, dev-story, code-review, qa-tester, ux-review, retrospective
+**Utility**: bmad-master, quick-flow, correct-course, sprint-status, readiness-check
 
-### State Machine
+## Usage with OpenClaw
 
-See `workflow/state-machine.md` for:
-- Epic status: `backlog → in-progress → done`
-- Story status: `backlog → ready-for-dev → in-progress → review → done`
-- Agent handoff rules between phases
-- Sprint tracking structure
+```javascript
+sessions_spawn({
+  task: "Create the PRD for our project",
+  agentId: "product-manager",
+  label: "prd-creation"
+});
+```
 
-### Templates
+## Credits
 
-Use files in `templates/` as starting points for your project artifacts. They contain placeholder variables (e.g., `{{project_name}}`) that get filled during workflow execution.
-
-### Checklists
-
-Use files in `checklists/` for validation at key workflow checkpoints.
-
-## Source
-
-Extracted from the official [BMad Method repository](https://github.com/bmad-method/bmad-method). All content is sourced verbatim or consolidated from the original agent definitions, workflow files, templates, and checklists.
-
-## License
-
-See the [original repository](https://github.com/bmad-method/bmad-method) for license terms.
+Based on the [BMad Method v6](https://github.com/bmadcode/BMAD-METHOD) by BMad Code.
