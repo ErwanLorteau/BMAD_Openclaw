@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BMAD Openclaw Team Config",
+  "description": "Optional team configuration for BMAD_Openclaw. Customize agent personas and inject company context without forking.",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version. Must be \"1\" for v1.",
+      "enum": ["1"]
+    },
+    "company": {
+      "type": "object",
+      "description": "Company context injected into all agent prompts as background knowledge.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Company display name. Resolves {{company_name}} in agent files.",
+          "examples": ["Acme Corp"]
+        },
+        "context": {
+          "type": "string",
+          "description": "Business context (multi-line ok). Resolves {{company_context}}.",
+          "examples": ["B2B SaaS for the logistics industry. Prioritize reliability."]
+        },
+        "tech_stack": {
+          "type": "string",
+          "description": "Primary tech stack. Resolves {{tech_stack}}.",
+          "examples": ["TypeScript, Next.js, PostgreSQL"]
+        },
+        "conventions": {
+          "type": "string",
+          "description": "Team norms (multi-line ok). Resolves {{conventions}}.",
+          "examples": ["All PRs require two reviewers."]
+        }
+      },
+      "additionalProperties": false
+    },
+    "agents": {
+      "type": "object",
+      "description": "Per-role agent persona overrides. Keys must match canonical role slugs.",
+      "propertyNames": {
+        "enum": [
+          "analyst", "architect", "developer", "product-manager",
+          "qa-engineer", "scrum-master", "tech-writer", "ux-designer", "bmad-master"
+        ]
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Replaces the agent's default display name.",
+            "examples": ["Alex", "Sam", "Jordan"]
+          },
+          "emoji": {
+            "type": "string",
+            "description": "Replaces the agent's default emoji.",
+            "examples": ["🔍", "🏗️", "🔧"]
+          },
+          "openclaw_agent_id": {
+            "type": "string",
+            "description": "agentId used for sessions_spawn in OpenClaw.",
+            "examples": ["alex", "sam", "jordan"]
+          },
+          "persona_append": {
+            "type": "string",
+            "description": "Text appended to the Persona section. Never replaces base persona."
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

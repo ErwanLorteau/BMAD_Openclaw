@@ -1,0 +1,89 @@
+# bmad.config.example.yaml — Team customization for BMAD_Openclaw
+# ─────────────────────────────────────────────────────────────────
+# Copy this file to bmad.config.yaml in your project root,
+# then uncomment and edit the fields you want to customize.
+#
+# No config file = current behavior (zero breaking changes).
+# Partial config is fine — override only what you need.
+#
+# IDE autocomplete (VS Code YAML extension):
+# yaml-language-server: $schema=./bmad.config.schema.json
+
+# Schema version — must be "1" for v1
+# version: "1"
+
+# ─────────────────────────────────────────────────────────────────
+# Company context — injected into all agent prompts as background
+# knowledge. Agents will be aware of this context when they work.
+# ─────────────────────────────────────────────────────────────────
+# company:
+#   name: "Acme Corp"                        # Resolves {{company_name}}
+#   context: |                               # Resolves {{company_context}}
+#     B2B SaaS for the logistics industry.
+#     Prioritize reliability and compliance over speed.
+#     All decisions require audit trails.
+#   tech_stack: "TypeScript, Next.js, PostgreSQL, Kubernetes"  # {{tech_stack}}
+#   conventions: |                           # Resolves {{conventions}}
+#     Post decisions to the team wiki, not chat.
+#     All PRs require two reviewers.
+#     Use conventional commits.
+
+# ─────────────────────────────────────────────────────────────────
+# Agent persona overrides
+# Keys MUST match the canonical role slugs listed below.
+# Unknown keys will produce a warning.
+#
+# Canonical role slugs:
+#   analyst | architect | developer | product-manager | qa-engineer
+#   scrum-master | tech-writer | ux-designer | bmad-master
+# ─────────────────────────────────────────────────────────────────
+# agents:
+#   analyst:
+#     name: "Alex"                 # Overrides default name
+#     emoji: "🔍"                  # Overrides default emoji
+#     openclaw_agent_id: "alex"    # Used for sessions_spawn agentId
+#     persona_append: |            # APPENDED to base persona — never replaces
+#       Uses web search MCP for real-time research. Always cites sources.
+#
+#   architect:
+#     name: "Sam"
+#     emoji: "🏗️"
+#     openclaw_agent_id: "sam"
+#     persona_append: "Prefers boring technology. Documents all decisions as ADRs."
+#
+#   developer:
+#     name: "Jordan"
+#     emoji: "🔧"
+#     openclaw_agent_id: "jordan"
+#     persona_append: "All code work happens in the team's dedicated dev environment."
+#
+#   product-manager:
+#     name: "Riley"
+#     emoji: "📊"
+#     openclaw_agent_id: "riley"
+#     persona_append: ""
+#
+#   qa-engineer:
+#     name: "Casey"
+#     emoji: "🧪"
+#     openclaw_agent_id: "casey"
+#
+#   scrum-master:
+#     name: "Morgan"
+#     emoji: "🏃"
+#     openclaw_agent_id: "morgan"
+#
+#   tech-writer:
+#     name: "Taylor"
+#     emoji: "📚"
+#     openclaw_agent_id: "taylor"
+#
+#   ux-designer:
+#     name: "Drew"
+#     emoji: "🎨"
+#     openclaw_agent_id: "drew"
+#
+#   bmad-master:
+#     name: "BMad Master"
+#     emoji: "🧙"
+#     openclaw_agent_id: "bmad-master"

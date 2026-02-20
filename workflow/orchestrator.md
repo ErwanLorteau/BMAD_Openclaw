@@ -1,5 +1,69 @@
 # BMad Method — Orchestrator Rules
 
+## Config Layer
+
+The config layer allows teams to customize agent personas and inject company context
+without forking or modifying any BMAD_Openclaw framework files.
+
+> **Note:** `bmad.config.yaml` is user-created and never overwritten by a framework update.
+> Agent names in this file reflect upstream defaults. If `bmad.config.yaml` is present,
+> names and emojis may be remapped per your team's configuration.
+
+### Config Discovery
+
+At session start, apply the following rules **once** and hold results as "active config":
+
+1. **CHECK** — Does `bmad.config.yaml` exist in the project root?
+   - **YES** → Read and parse it. Proceed to step 2.
+   - **NO** → All agent file defaults apply unchanged. Skip all remaining config steps.
+
+2. **VALIDATE** — If a `version:` field is present and its value is not `"1"`, emit a
+   warning and continue (do not abort).
+
+3. **WARN** — If any key under `agents:` does not match a canonical role slug
+   (`analyst`, `architect`, `developer`, `product-manager`, `qa-engineer`,
+   `scrum-master`, `tech-writer`, `ux-designer`, `bmad-master`), emit a warning
+   (likely a typo). Do not abort.
+
+### Agent Name Resolution
+
+When activating any agent role:
+
+1. **FIND** — Look up `agents.<role-key>` in the active config.
+   - Role not in config → use all file defaults for that agent. Stop here.
+   - Role in config → proceed.
+
+2. **APPLY** field-level overrides (only for fields explicitly present in config):
+   - `agents.<role>.name` → use as the agent's display name
+   - `agents.<role>.emoji` → use in the agent header
+   - `agents.<role>.persona_append` → append as an additional paragraph in the Persona section
+   - `agents.<role>.openclaw_agent_id` → use for `sessions_spawn` agentId
+
+### Company Context Injection
+
+If `company.*` fields are present in the active config:
+
+- Make `company.name`, `company.context`, `company.tech_stack`, and `company.conventions`
+  available as background knowledge when acting as **any** agent.
+- Do **not** expose raw config YAML verbatim to users unless explicitly asked.
+
+### Template Variable Resolution
+
+Agent files may contain `{{var|default}}` placeholders. Resolution rules:
+
+- `{{company_name}}` → `company.name` (or empty string if not set)
+- `{{company_context}}` → `company.context` (or empty string)
+- `{{tech_stack}}` → `company.tech_stack` (or empty string)
+- `{{conventions}}` → `company.conventions` (or empty string)
+- `{{agent_name|DEFAULT}}` → `agents.<role>.name` from config, or `DEFAULT` if not set
+- `{{agent_emoji|DEFAULT}}` → `agents.<role>.emoji` from config, or `DEFAULT` if not set
+
+The text after `|` is the **inline default** — the value used when the variable is absent
+from config. Agent files remain fully functional and readable without any config present.
+
+---
+
+
 ## Workflow Execution Engine
 
 The workflow execution engine governs all BMad workflow processing. Every workflow follows these rules.
