@@ -61,7 +61,7 @@
 #     name: "Riley"
 #     emoji: "📊"
 #     openclaw_agent_id: "riley"
-#     persona_append: ""
+#     # persona_append omitted — base persona unchanged
 #
 #   qa-engineer:
 #     name: "Casey"

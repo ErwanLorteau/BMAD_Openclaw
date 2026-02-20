@@ -23,6 +23,15 @@ your customizations before activating any agent.
 
 ---
 
+## Config Discovery
+
+The orchestrator looks for `bmad.config.yaml` in the **project root** (the directory
+from which you start OpenClaw) at session start. The file is read once and held in
+memory for the session. See [workflow/orchestrator.md](../workflow/orchestrator.md)
+for the full resolution algorithm.
+
+---
+
 ## Config File Reference
 
 The config file lives at `bmad.config.yaml` in your **project root** (same directory
@@ -100,13 +109,13 @@ always stays intact. Use it to add team-specific notes: tools used, channels to 
 | Config key | Default name | Default emoji | File |
 |------------|-------------|---------------|------|
 | `analyst` | Mary | 📊 | `agents/analyst.md` |
-| `architect` | James | 🏗️ | `agents/architect.md` |
-| `developer` | John | 💻 | `agents/developer.md` |
+| `architect` | Winston | 🏗️ | `agents/architect.md` |
+| `developer` | Amelia | 💻 | `agents/developer.md` |
 | `product-manager` | John | 📋 | `agents/product-manager.md` |
-| `qa-engineer` | Mary | 🔍 | `agents/qa-engineer.md` |
+| `qa-engineer` | Quinn | 🧪 | `agents/qa-engineer.md` |
 | `scrum-master` | Bob | 🏃 | `agents/scrum-master.md` |
-| `tech-writer` | Paige | ✍️ | `agents/tech-writer.md` |
-| `ux-designer` | Jane | 🎨 | `agents/ux-designer.md` |
+| `tech-writer` | Paige | 📚 | `agents/tech-writer.md` |
+| `ux-designer` | Sally | 🎨 | `agents/ux-designer.md` |
 | `bmad-master` | BMad Master | 🧙 | `agents/bmad-master.md` |
 
 An unknown key (e.g., a typo) produces a warning but does not abort the session.
@@ -132,6 +141,10 @@ Agent files use `{{var|DEFAULT}}` placeholders in their H1 headers. Resolution:
 
 This makes agent files fully readable and functional without any config. The inline
 default is the upstream value (e.g., `{{agent_name|John}}`).
+
+> **Note:** Company context variables (`{{company_name}}`, `{{company_context}}`,
+> `{{tech_stack}}`, `{{conventions}}`) resolve to an **empty string** when the
+> corresponding config field is absent — they do not use the `|default` inline syntax.
 
 ### `persona_append` Behavior
 
@@ -166,6 +179,7 @@ The following are **not** supported in v1 — planned for a future release:
 |------------|-------|
 | Environment variable interpolation in config values | Use OpenClaw session context for secrets |
 | Routing overrides (`routing:` key) | Planned for V2 |
+| Template placeholders in agent H1 headers | Currently only `product-manager.md` is instrumented as a proof-of-concept. Other agents use hardcoded names; `agents.ROLE.name` config overrides are applied by the orchestrator at runtime and do not require H1 placeholders in the agent file. Full agent placeholder coverage is planned for a follow-up PR. |
 | Deeper persona placeholders (beyond H1 headers) | `persona_append` covers most use cases |
 | Per-agent config files | Single unified file is intentional for small teams |
 | Config hot-reload without session restart | Re-read happens at session start |

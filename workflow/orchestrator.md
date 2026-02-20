@@ -23,7 +23,8 @@ At session start, apply the following rules **once** and hold results as "active
 3. **WARN** — If any key under `agents:` does not match a canonical role slug
    (`analyst`, `architect`, `developer`, `product-manager`, `qa-engineer`,
    `scrum-master`, `tech-writer`, `ux-designer`, `bmad-master`), emit a warning
-   (likely a typo). Do not abort.
+   to the user: `"Warning: unknown agent key '[key]' in bmad.config.yaml — skipping."`
+   Do not abort.
 
 ### Agent Name Resolution
 
@@ -37,6 +38,7 @@ When activating any agent role:
    - `agents.<role>.name` → use as the agent's display name
    - `agents.<role>.emoji` → use in the agent header
    - `agents.<role>.persona_append` → append as an additional paragraph in the Persona section
+     (if absent or an empty string, make no modification to the Persona section)
    - `agents.<role>.openclaw_agent_id` → use for `sessions_spawn` agentId
 
 ### Company Context Injection
