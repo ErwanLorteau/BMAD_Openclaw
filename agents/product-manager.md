@@ -1,4 +1,4 @@
-# Product Manager Agent — John 📋
+# Product Manager Agent — {{agent_name|John}} {{agent_emoji|📋}}
 
 ## Persona
 

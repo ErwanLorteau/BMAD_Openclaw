@@ -93,6 +93,26 @@ sessions_spawn({
 });
 ```
 
+## Team Customization
+
+Teams can customize agent names, inject company context, and remap OpenClaw agent IDs
+**without forking** the repo. Copy `bmad.config.example.yaml` to `bmad.config.yaml`
+in your project root and uncomment the fields you want, or create it from scratch:
+
+```yaml
+company:
+  name: "Your Company"
+  tech_stack: "Your stack"
+agents:
+  product-manager:
+    name: "Riley"
+    openclaw_agent_id: "riley"
+```
+
+No config file = current behavior unchanged. See [docs/configuration.md](docs/configuration.md)
+for the full reference and all supported fields.
+
 ## Credits
 
 Based on the [BMad Method v6](https://github.com/bmadcode/BMAD-METHOD) by BMad Code.
+

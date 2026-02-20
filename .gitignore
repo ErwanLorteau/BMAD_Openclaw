@@ -1,0 +1,3 @@
+# Personal team config — contains company secrets and agent persona overrides.
+# Use bmad.config.example.yaml as a template.
+bmad.config.yaml
