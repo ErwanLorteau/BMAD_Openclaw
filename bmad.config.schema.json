@@ -1,0 +1,66 @@
+{
+  "": "http://json-schema.org/draft-07/schema#",
+  "title": "BMAD_Openclaw Configuration",
+  "description": "Team customization config for BMAD_Openclaw. Place bmad.config.yaml in your project root \u2014 the orchestrator reads it at session start. No file = current behavior unchanged.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "enum": [
+        "1"
+      ],
+      "description": "Config schema version. Must be 1 for v1."
+    },
+    "company": {
+      "type": "object",
+      "description": "Company context injected into all agent prompts as background knowledge.",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Company name. Resolves {{company_name}} in agent prompts."
+        },
+        "context": {
+          "type": "string",
+          "description": "Company background context (multi-line ok). Resolves {{company_context}}."
+        },
+        "tech_stack": {
+          "type": "string",
+          "description": "Primary tech stack. Resolves {{tech_stack}}."
+        },
+        "conventions": {
+          "type": "string",
+          "description": "Team conventions and norms (multi-line ok). Resolves {{conventions}}."
+        }
+      }
+    },
+    "agents": {
+      "type": "object",
+      "description": "Agent persona overrides. Keys must match canonical role slugs.",
+      "additionalProperties": {
+        "type": "object",
+        "description": "Override for a specific agent role.",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Display name override. Replaces the agent default name."
+          },
+          "emoji": {
+            "type": "string",
+            "description": "Emoji override. Replaces the agent default emoji."
+          },
+          "openclaw_agent_id": {
+            "type": "string",
+            "description": "OpenClaw agent ID used for sessions_spawn. Falls back to role slug if not set."
+          },
+          "persona_append": {
+            "type": "string",
+            "description": "Text APPENDED to the agent Persona section. Never replaces base persona."
+          }
+        }
+      }
+    }
+  }
+}
