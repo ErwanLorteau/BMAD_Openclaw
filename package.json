@@ -1,0 +1,26 @@
+{
+  "name": "bmad-method-plugin",
+  "version": "0.1.0",
+  "description": "BMad Method plugin for OpenClaw — AI-driven agile development workflow orchestration",
+  "type": "module",
+  "main": "src/index.ts",
+  "openclaw": {
+    "extensions": ["./src/index.ts"]
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "@sinclair/typebox": "^0.34.0",
+    "yaml": "^2.7.0",
+    "gray-matter": "^4.0.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0",
+    "@types/node": "^22.0.0"
+  }
+}
