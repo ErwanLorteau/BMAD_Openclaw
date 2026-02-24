@@ -24,21 +24,37 @@ The plugin registers 7 agent tools that handle workflow orchestration, step-by-s
 | `bmad_complete_workflow` | Mark workflow complete, suggest next steps |
 | `bmad_get_state` | Get current project state (phase, progress, artifacts) |
 
+
+Replace the **Install** and **Configure** sections with:
+
+
 ## Install
 
 ```bash
-# Copy or symlink into OpenClaw extensions
-cp -r bmad-method-plugin ~/.openclaw/extensions/bmad-method
+# Clone directly into OpenClaw extensions
+git clone https://github.com/ErwanLorteau/BMAD_Openclaw.git ~/.openclaw/extensions/bmad-method
 
-# Or link for development
-openclaw plugins install -l ./bmad-method-plugin
+# Install dependencies
+cd ~/.openclaw/extensions/bmad-method && npm install
+```
+
+For development, you can symlink instead:
+
+```bash
+ln -s /path/to/BMAD_Openclaw ~/.openclaw/extensions/bmad-method
+cd ~/.openclaw/extensions/bmad-method && npm install
 ```
 
 ## Configure
 
+Add the following to your `~/.openclaw/openclaw.json`:
+
 ```json5
 {
   plugins: {
+    load: {
+      paths: ["~/.openclaw/extensions/bmad-method"]
+    },
     entries: {
       "bmad-method": {
         enabled: true,
@@ -61,6 +77,8 @@ openclaw plugins install -l ./bmad-method-plugin
   }
 }
 ```
+
+Then restart OpenClaw for changes to take effect.
 
 ## Workflow
 
