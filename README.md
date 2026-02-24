@@ -4,6 +4,9 @@ AI-driven agile development framework — the [BMad Method](https://github.com/b
 
 Your OpenClaw agent becomes a BMad Master, orchestrating the full software development lifecycle through structured workflows: analysis → planning → solutioning → implementation.
 
+<img width="1886" height="898" alt="image" src="https://github.com/user-attachments/assets/0867aa78-3c37-45c0-a832-f23f812c2458" />
+
+
 ## How It Works
 
 The plugin registers 7 agent tools that handle workflow orchestration, step-by-step execution, and artifact management. The master agent role-plays as different BMad personas (Analyst, PM, Architect, etc.) while the plugin manages state and step progression deterministically.
