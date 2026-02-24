@@ -112,10 +112,14 @@ export async function execute(
   const modeRules = mode === "yolo" ? YOLO_MODE_RULES : NORMAL_MODE_RULES;
 
   // Variable resolution map for step content
+  // These match the variables from BMad module.yaml + core config
   const vars: Record<string, string> = {
     "project-root": projectPath,
     project_name: state.projectName,
     user_name: "User",
+    communication_language: "english",
+    document_output_language: "english",
+    user_skill_level: "expert",
     output_folder: "_bmad-output",
     planning_artifacts: join(projectPath, "_bmad-output/planning-artifacts"),
     implementation_artifacts: join(projectPath, "_bmad-output/implementation-artifacts"),
