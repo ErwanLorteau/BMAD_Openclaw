@@ -12,15 +12,16 @@ import type { AgentPersona } from "../types.ts";
  * Some agents have nested directories (tech-writer).
  */
 const AGENT_FILES: Record<string, string> = {
-  analyst: "agents/analyst.agent.yaml",
-  architect: "agents/architect.agent.yaml",
-  pm: "agents/pm.agent.yaml",
-  sm: "agents/sm.agent.yaml",
-  dev: "agents/dev.agent.yaml",
-  qa: "agents/qa.agent.yaml",
-  "ux-designer": "agents/ux-designer.agent.yaml",
-  "quick-flow-solo-dev": "agents/quick-flow-solo-dev.agent.yaml",
-  "tech-writer": "agents/tech-writer/tech-writer.agent.yaml",
+  "bmad-master": "core/agents/bmad-master.agent.yaml",
+  analyst: "bmm/agents/analyst.agent.yaml",
+  architect: "bmm/agents/architect.agent.yaml",
+  pm: "bmm/agents/pm.agent.yaml",
+  sm: "bmm/agents/sm.agent.yaml",
+  dev: "bmm/agents/dev.agent.yaml",
+  qa: "bmm/agents/qa.agent.yaml",
+  "ux-designer": "bmm/agents/ux-designer.agent.yaml",
+  "quick-flow-solo-dev": "bmm/agents/quick-flow-solo-dev.agent.yaml",
+  "tech-writer": "bmm/agents/tech-writer/tech-writer.agent.yaml",
 };
 
 /**

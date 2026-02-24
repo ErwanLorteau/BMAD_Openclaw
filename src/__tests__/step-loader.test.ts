@@ -11,7 +11,7 @@ import {
 const BMAD_METHOD = join(import.meta.dirname, "../../bmad-method");
 const BRIEF_STEPS = join(
   BMAD_METHOD,
-  "workflows/1-analysis/create-product-brief/steps"
+  "bmm/workflows/1-analysis/create-product-brief/steps"
 );
 
 describe("step-loader", () => {

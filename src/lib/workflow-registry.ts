@@ -19,9 +19,9 @@ export const WORKFLOW_REGISTRY: WorkflowDefinition[] = [
     phase: "analysis",
     agentId: "analyst",
     workflowFile:
-      "workflows/1-analysis/create-product-brief/workflow.md",
+      "bmm/workflows/1-analysis/create-product-brief/workflow.md",
     stepsDir:
-      "workflows/1-analysis/create-product-brief/steps",
+      "bmm/workflows/1-analysis/create-product-brief/steps",
     requires: [],
   },
   {
@@ -32,9 +32,9 @@ export const WORKFLOW_REGISTRY: WorkflowDefinition[] = [
     phase: "analysis",
     agentId: "analyst",
     workflowFile:
-      "workflows/1-analysis/research/workflow-market-research.md",
+      "bmm/workflows/1-analysis/research/workflow-market-research.md",
     stepsDir:
-      "workflows/1-analysis/research/market-steps",
+      "bmm/workflows/1-analysis/research/market-steps",
     requires: [],
   },
   {
@@ -45,9 +45,9 @@ export const WORKFLOW_REGISTRY: WorkflowDefinition[] = [
     phase: "analysis",
     agentId: "analyst",
     workflowFile:
-      "workflows/1-analysis/research/workflow-domain-research.md",
+      "bmm/workflows/1-analysis/research/workflow-domain-research.md",
     stepsDir:
-      "workflows/1-analysis/research/domain-steps",
+      "bmm/workflows/1-analysis/research/domain-steps",
     requires: [],
   },
   {
@@ -58,9 +58,9 @@ export const WORKFLOW_REGISTRY: WorkflowDefinition[] = [
     phase: "analysis",
     agentId: "analyst",
     workflowFile:
-      "workflows/1-analysis/research/workflow-technical-research.md",
+      "bmm/workflows/1-analysis/research/workflow-technical-research.md",
     stepsDir:
-      "workflows/1-analysis/research/technical-steps",
+      "bmm/workflows/1-analysis/research/technical-steps",
     requires: [],
   },
 
@@ -73,9 +73,9 @@ export const WORKFLOW_REGISTRY: WorkflowDefinition[] = [
     phase: "planning",
     agentId: "pm",
     workflowFile:
-      "workflows/2-plan-workflows/create-prd/workflow-create-prd.md",
+      "bmm/workflows/2-plan-workflows/create-prd/workflow-create-prd.md",
     stepsDir:
-      "workflows/2-plan-workflows/create-prd/steps-c",
+      "bmm/workflows/2-plan-workflows/create-prd/steps-c",
     requires: ["create-product-brief"],
   },
   {
@@ -86,9 +86,9 @@ export const WORKFLOW_REGISTRY: WorkflowDefinition[] = [
     phase: "planning",
     agentId: "pm",
     workflowFile:
-      "workflows/2-plan-workflows/create-prd/workflow-validate-prd.md",
+      "bmm/workflows/2-plan-workflows/create-prd/workflow-validate-prd.md",
     stepsDir:
-      "workflows/2-plan-workflows/create-prd/steps-v",
+      "bmm/workflows/2-plan-workflows/create-prd/steps-v",
     requires: ["create-prd"],
   },
   {
@@ -98,9 +98,9 @@ export const WORKFLOW_REGISTRY: WorkflowDefinition[] = [
     phase: "planning",
     agentId: "pm",
     workflowFile:
-      "workflows/2-plan-workflows/create-prd/workflow-edit-prd.md",
+      "bmm/workflows/2-plan-workflows/create-prd/workflow-edit-prd.md",
     stepsDir:
-      "workflows/2-plan-workflows/create-prd/steps-e",
+      "bmm/workflows/2-plan-workflows/create-prd/steps-e",
     requires: ["create-prd"],
   },
   {
@@ -111,9 +111,9 @@ export const WORKFLOW_REGISTRY: WorkflowDefinition[] = [
     phase: "planning",
     agentId: "ux-designer",
     workflowFile:
-      "workflows/2-plan-workflows/create-ux-design/workflow.md",
+      "bmm/workflows/2-plan-workflows/create-ux-design/workflow.md",
     stepsDir:
-      "workflows/2-plan-workflows/create-ux-design/steps",
+      "bmm/workflows/2-plan-workflows/create-ux-design/steps",
     requires: ["create-prd"],
   },
 
@@ -126,9 +126,9 @@ export const WORKFLOW_REGISTRY: WorkflowDefinition[] = [
     phase: "solutioning",
     agentId: "architect",
     workflowFile:
-      "workflows/3-solutioning/create-architecture/workflow.md",
+      "bmm/workflows/3-solutioning/create-architecture/workflow.md",
     stepsDir:
-      "workflows/3-solutioning/create-architecture/steps",
+      "bmm/workflows/3-solutioning/create-architecture/steps",
     requires: ["create-prd"],
   },
   {
@@ -139,9 +139,9 @@ export const WORKFLOW_REGISTRY: WorkflowDefinition[] = [
     phase: "solutioning",
     agentId: "pm",
     workflowFile:
-      "workflows/3-solutioning/create-epics-and-stories/workflow.md",
+      "bmm/workflows/3-solutioning/create-epics-and-stories/workflow.md",
     stepsDir:
-      "workflows/3-solutioning/create-epics-and-stories/steps",
+      "bmm/workflows/3-solutioning/create-epics-and-stories/steps",
     requires: ["create-prd", "create-architecture"],
   },
   {
@@ -152,9 +152,9 @@ export const WORKFLOW_REGISTRY: WorkflowDefinition[] = [
     phase: "solutioning",
     agentId: "architect",
     workflowFile:
-      "workflows/3-solutioning/check-implementation-readiness/workflow.md",
+      "bmm/workflows/3-solutioning/check-implementation-readiness/workflow.md",
     stepsDir:
-      "workflows/3-solutioning/check-implementation-readiness/steps",
+      "bmm/workflows/3-solutioning/check-implementation-readiness/steps",
     requires: ["create-prd", "create-architecture", "create-epics-and-stories"],
   },
 
@@ -166,7 +166,7 @@ export const WORKFLOW_REGISTRY: WorkflowDefinition[] = [
     phase: "implementation",
     agentId: "sm",
     workflowFile:
-      "workflows/4-implementation/sprint-planning/workflow.yaml",
+      "bmm/workflows/4-implementation/sprint-planning/workflow.yaml",
     stepsDir: null,
     requires: ["create-epics-and-stories"],
   },
@@ -178,7 +178,7 @@ export const WORKFLOW_REGISTRY: WorkflowDefinition[] = [
     phase: "implementation",
     agentId: "sm",
     workflowFile:
-      "workflows/4-implementation/create-story/workflow.yaml",
+      "bmm/workflows/4-implementation/create-story/workflow.yaml",
     stepsDir: null,
     requires: ["sprint-planning"],
   },
@@ -189,7 +189,7 @@ export const WORKFLOW_REGISTRY: WorkflowDefinition[] = [
     phase: "implementation",
     agentId: "dev",
     workflowFile:
-      "workflows/4-implementation/dev-story/workflow.yaml",
+      "bmm/workflows/4-implementation/dev-story/workflow.yaml",
     stepsDir: null,
     requires: ["create-story"],
   },
@@ -201,7 +201,7 @@ export const WORKFLOW_REGISTRY: WorkflowDefinition[] = [
     phase: "implementation",
     agentId: "dev",
     workflowFile:
-      "workflows/4-implementation/code-review/workflow.yaml",
+      "bmm/workflows/4-implementation/code-review/workflow.yaml",
     stepsDir: null,
     requires: ["dev-story"],
   },
@@ -215,9 +215,9 @@ export const WORKFLOW_REGISTRY: WorkflowDefinition[] = [
     phase: "analysis",
     agentId: "quick-flow-solo-dev",
     workflowFile:
-      "workflows/bmad-quick-flow/quick-spec/workflow.md",
+      "bmm/workflows/bmad-quick-flow/quick-spec/workflow.md",
     stepsDir:
-      "workflows/bmad-quick-flow/quick-spec/steps",
+      "bmm/workflows/bmad-quick-flow/quick-spec/steps",
     requires: [],
   },
   {
@@ -227,10 +227,100 @@ export const WORKFLOW_REGISTRY: WorkflowDefinition[] = [
     phase: "implementation",
     agentId: "quick-flow-solo-dev",
     workflowFile:
-      "workflows/bmad-quick-flow/quick-dev/workflow.md",
+      "bmm/workflows/bmad-quick-flow/quick-dev/workflow.md",
     stepsDir:
-      "workflows/bmad-quick-flow/quick-dev/steps",
+      "bmm/workflows/bmad-quick-flow/quick-dev/steps",
     requires: ["quick-spec"],
+  },
+
+  // ── Supporting Workflows ───────────────────────────────────────────────
+  {
+    id: "correct-course",
+    name: "Course Correction",
+    description:
+      "Navigate major changes discovered mid-implementation",
+    phase: "implementation",
+    agentId: "pm",
+    workflowFile:
+      "bmm/workflows/4-implementation/correct-course/workflow.yaml",
+    stepsDir: null,
+    requires: ["sprint-planning"],
+  },
+  {
+    id: "sprint-status",
+    name: "Sprint Status",
+    description:
+      "View current sprint status and next recommended action",
+    phase: "implementation",
+    agentId: "sm",
+    workflowFile:
+      "bmm/workflows/4-implementation/sprint-status/workflow.yaml",
+    stepsDir: null,
+    requires: ["sprint-planning"],
+  },
+  {
+    id: "retrospective",
+    name: "Retrospective",
+    description:
+      "Party Mode review of all work completed across an epic",
+    phase: "implementation",
+    agentId: "sm",
+    workflowFile:
+      "bmm/workflows/4-implementation/retrospective/workflow.yaml",
+    stepsDir: null,
+    requires: ["sprint-planning"],
+  },
+  {
+    id: "document-project",
+    name: "Document Project",
+    description:
+      "Analyze an existing project to produce documentation for human and LLM",
+    phase: "analysis",
+    agentId: "analyst",
+    workflowFile:
+      "bmm/workflows/document-project/workflow.yaml",
+    stepsDir: null,
+    requires: [],
+  },
+  {
+    id: "generate-project-context",
+    name: "Generate Project Context",
+    description:
+      "Create project-context.md with critical rules for AI agents",
+    phase: "analysis",
+    agentId: "analyst",
+    workflowFile:
+      "bmm/workflows/generate-project-context/workflow.md",
+    stepsDir:
+      "bmm/workflows/generate-project-context/steps",
+    requires: [],
+  },
+  {
+    id: "qa-generate-e2e-tests",
+    name: "QA Generate E2E Tests",
+    description:
+      "Generate automated end-to-end tests for existing features",
+    phase: "implementation",
+    agentId: "qa",
+    workflowFile:
+      "bmm/workflows/qa-generate-e2e-tests/workflow.yaml",
+    stepsDir: null,
+    requires: ["dev-story"],
+  },
+
+  // ── Core Workflows ─────────────────────────────────────────────────────
+  {
+    id: "brainstorming",
+    name: "Brainstorm Project",
+    description:
+      "Expert guided facilitation through brainstorming techniques with a final report",
+    phase: "analysis",
+    agentId: "analyst",
+    workflowFile:
+      "core/workflows/brainstorming/workflow.md",
+    stepsDir:
+      "core/workflows/brainstorming/steps",
+    requires: [],
   },
 ];
 
