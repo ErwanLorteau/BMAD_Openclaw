@@ -25,6 +25,7 @@ The plugin registers 7 agent tools that handle workflow orchestration, step-by-s
 | `bmad_get_state` | Get current project state (phase, progress, artifacts) |
 
 
+
 ## Install
 
 ```bash
@@ -32,13 +33,6 @@ The plugin registers 7 agent tools that handle workflow orchestration, step-by-s
 git clone https://github.com/ErwanLorteau/BMAD_Openclaw.git ~/.openclaw/extensions/bmad-method
 
 # Install dependencies
-cd ~/.openclaw/extensions/bmad-method && npm install
-```
-
-For development, you can symlink instead:
-
-```bash
-ln -s /path/to/BMAD_Openclaw ~/.openclaw/extensions/bmad-method
 cd ~/.openclaw/extensions/bmad-method && npm install
 ```
 
@@ -103,9 +97,17 @@ openclaw plugins list
 You should see:
 ```
 [plugins] BMad Method plugin loaded. Method path: ...
-[plugins] BMad Method: registered 7 tools (bmad_init_project, bmad_list_workflows, bmad_start_workflow, bmad_load_step, bmad_save_artifact, bmad_complete_workflow, bmad_get_state)
+[plugins] BMad Method: registered 7 tools
 ```
 
+## Usage
+
+1. **Ask your main agent** to spawn the BMad Master:
+   > "Spawn bmad-master to initialize a new project"
+
+2. **Talk directly to the BMad Master** session — it will guide you through the full BMad workflow: analysis → planning → solutioning → implementation.
+
+3. The BMad Master has access to all 7 tools and will orchestrate workflows, load agent personas, and manage artifacts automatically.
 
 ## Workflow
 
