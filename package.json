@@ -1,5 +1,5 @@
 {
-  "name": "bmad-method-plugin",
+  "name": "bmad-method",
   "version": "0.1.0",
   "description": "BMad Method plugin for OpenClaw — AI-driven agile development workflow orchestration",
   "type": "module",
