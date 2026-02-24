@@ -25,9 +25,6 @@ The plugin registers 7 agent tools that handle workflow orchestration, step-by-s
 | `bmad_get_state` | Get current project state (phase, progress, artifacts) |
 
 
-Replace the **Install** and **Configure** sections with:
-
-
 ## Install
 
 ```bash
@@ -53,7 +50,8 @@ Add the following to your `~/.openclaw/openclaw.json`:
 {
   plugins: {
     load: {
-      paths: ["~/.openclaw/extensions/bmad-method"]
+      paths: ["/home/ubuntu/.openclaw/extensions/bmad-method"]
+      // ⚠️ Use absolute path — tilde (~) may not resolve
     },
     entries: {
       "bmad-method": {
@@ -66,19 +64,48 @@ Add the following to your `~/.openclaw/openclaw.json`:
     }
   },
   agents: {
-    list: [{
-      id: "bmad-master",
-      name: "BMad Master",
-      tools: {
-        allow: ["bmad-method"],  // Enable all BMad tools
-        deny: ["sessions_spawn"] // Force spawning through plugin
+    list: [
+      {
+        // BMad Master agent — executes BMad workflows
+        id: "bmad-master",
+        name: "BMad Master",
+        tools: {
+          allow: ["bmad-method"],  // Enable all BMad tools
+          deny: ["sessions_spawn"] // Force spawning through plugin
+        }
+      },
+      {
+        // Your main agent — needs permission to spawn bmad-master
+        id: "main",
+        subagents: {
+          allowAgents: ["main", "bmad-master"]
+        }
       }
-    }]
+    ]
   }
 }
 ```
 
-Then restart OpenClaw for changes to take effect.
+Then restart OpenClaw:
+
+```bash
+openclaw gateway restart
+```
+
+## Verify
+
+After restart, confirm the plugin loaded:
+
+```bash
+openclaw plugins list
+```
+
+You should see:
+```
+[plugins] BMad Method plugin loaded. Method path: ...
+[plugins] BMad Method: registered 7 tools (bmad_init_project, bmad_list_workflows, bmad_start_workflow, bmad_load_step, bmad_save_artifact, bmad_complete_workflow, bmad_get_state)
+```
+
 
 ## Workflow
 
