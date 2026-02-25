@@ -41,6 +41,15 @@ export async function execute(
   const active = state.activeWorkflow;
   const workflowDef = getWorkflow(active.id);
 
+  // Guard: ensure all steps have been completed before allowing workflow completion
+  if (active.totalSteps && active.currentStep < active.totalSteps) {
+    return text(
+      `Error: Cannot complete workflow "${active.id}" — currently on step ${active.currentStep} of ${active.totalSteps}. ` +
+        `Complete all steps before calling \`bmad_complete_workflow\`. ` +
+        `Use \`bmad_load_step\` to advance to the next step.`
+    );
+  }
+
   // Move to completed
   state.completedWorkflows.push({
     id: active.id,

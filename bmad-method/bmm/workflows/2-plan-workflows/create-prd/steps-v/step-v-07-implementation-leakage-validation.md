@@ -1,8 +1,6 @@
 ---
 name: 'step-v-07-implementation-leakage-validation'
-description: 'Implementation Leakage Check - Ensure FRs and NFRs don\'t include implementation details'
-
-# File references (ONLY variables used in this step)
+description: "Implementation Leakage Check - Ensure FRs and NFRs don't include implementation details"
 nextStepFile: './step-v-08-domain-compliance-validation.md'
 prdFile: '{prd_file_path}'
 validationReportPath: '{validation_report_path}'

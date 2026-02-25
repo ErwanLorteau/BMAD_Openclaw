@@ -56,6 +56,16 @@ export async function execute(
     outputPath = join(projectPath, outputPath);
   }
 
+  // Security: resolve and verify the output path stays within the project directory
+  const { resolve } = await import("node:path");
+  const resolvedOutput = resolve(outputPath);
+  const resolvedProject = resolve(projectPath);
+  if (!resolvedOutput.startsWith(resolvedProject + "/") && resolvedOutput !== resolvedProject) {
+    return text(
+      `Error: Output path escapes project directory. Resolved path "${resolvedOutput}" is outside "${resolvedProject}".`
+    );
+  }
+
   // Validate content
   if (!content || content.trim().length === 0) {
     return text("Error: Content is empty. Cannot save an empty artifact.");

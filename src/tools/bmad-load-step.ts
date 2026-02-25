@@ -7,7 +7,6 @@
 import { Type } from "@sinclair/typebox";
 import { readState, writeState } from "../lib/state.ts";
 import { loadStepFile, listStepFiles, resolveStepPath } from "../lib/step-loader.ts";
-import { getWorkflow } from "../lib/workflow-registry.ts";
 import { join, dirname } from "node:path";
 import type { ToolResult } from "../types.ts";
 

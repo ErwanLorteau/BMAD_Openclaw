@@ -20,7 +20,20 @@ export function statePath(projectPath: string): string {
 export async function readState(projectPath: string): Promise<BmadState | null> {
   try {
     const raw = await readFile(statePath(projectPath), "utf-8");
-    return JSON.parse(raw) as BmadState;
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object" || !parsed.projectName) {
+      return null;
+    }
+    // Sanitize: ensure completedWorkflows is always a valid array
+    if (!Array.isArray(parsed.completedWorkflows)) {
+      parsed.completedWorkflows = [];
+    } else {
+      // Filter out null/undefined entries
+      parsed.completedWorkflows = parsed.completedWorkflows.filter(
+        (w: unknown) => w != null && typeof w === "object"
+      );
+    }
+    return parsed as BmadState;
   } catch {
     return null;
   }
