@@ -84,9 +84,10 @@ export async function execute(
     );
   }
 
-  // Resolve variables in step content
+  // Resolve variables in step content (handle both {var} and {{var}} patterns)
   let resolvedContent = nextStep.content;
   for (const [key, value] of Object.entries(vars)) {
+    resolvedContent = resolvedContent.replaceAll(`{{${key}}}`, value);
     resolvedContent = resolvedContent.replaceAll(`{${key}}`, value);
   }
 
@@ -110,7 +111,7 @@ export async function execute(
     "---",
     "",
     nextStep.nextStepFile
-      ? `**When complete:** Call \`bmad_save_artifact\` to save output, then \`bmad_load_step\` for the next step.`
+      ? `**When complete:** Call \`bmad_save_artifact\` to save this step's output, then \`bmad_load_step\` for the next step.`
       : `**This is the final step.** Call \`bmad_save_artifact\` to save output, then \`bmad_complete_workflow\` to finalize.`,
   ];
 

@@ -15,7 +15,7 @@ import {
   NORMAL_MODE_RULES,
 } from "../lib/orchestrator-rules.ts";
 import { join } from "node:path";
-import { readFile } from "node:fs/promises";
+import { readFile, access } from "node:fs/promises";
 import type { ToolResult } from "../types.ts";
 
 export const name = "bmad_start_workflow";
@@ -46,6 +46,25 @@ export async function execute(
   const state = await readState(projectPath);
   if (!state) {
     return text("Error: Project not initialized. Run `bmad_init_project` first.");
+  }
+
+  // Verify proper initialization (symlinks + config must exist from bmad_init_project)
+  const bmad = join(projectPath, "_bmad");
+  const requiredPaths = [
+    join(bmad, "config.yaml"),
+    join(bmad, "core"),
+    join(bmad, "bmm"),
+  ];
+  for (const p of requiredPaths) {
+    try {
+      await access(p);
+    } catch {
+      return text(
+        `Error: Project structure is incomplete — missing \`${p.replace(projectPath + "/", "")}\`. ` +
+          `Run \`bmad_init_project\` to properly initialize the project. ` +
+          `Do NOT create project directories manually.`
+      );
+    }
   }
   if (state.activeWorkflow) {
     return text(
@@ -126,9 +145,10 @@ export async function execute(
     product_knowledge: join(projectPath, "docs"),
   };
 
-  // Resolve variables in step content
+  // Resolve variables in step content (handle both {var} and {{var}} patterns)
   let resolvedContent = stepContent;
   for (const [key, value] of Object.entries(vars)) {
+    resolvedContent = resolvedContent.replaceAll(`{{${key}}}`, value);
     resolvedContent = resolvedContent.replaceAll(`{${key}}`, value);
   }
 
