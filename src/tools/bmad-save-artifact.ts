@@ -1,7 +1,7 @@
 /**
  * bmad_save_artifact — Save workflow output to disk.
- * Validates content is non-empty, writes to the output path,
- * updates stepsCompleted in frontmatter.
+ * Always appends to the artifact file (multi-step workflows build incrementally).
+ * Safeguards prevent double-saves and detect full-doc duplicates.
  */
 
 import { Type } from "@sinclair/typebox";
@@ -12,14 +12,14 @@ import type { ToolResult } from "../types.ts";
 
 export const name = "bmad_save_artifact";
 export const description =
-  "Save workflow artifact output to disk. Writes content to the specified output file path.";
+  "Save workflow artifact output to disk. Appends content to the output file (each step adds its section incrementally).";
 
 export const parameters = Type.Object({
   projectPath: Type.String({
     description: "Absolute path to the project root directory",
   }),
   content: Type.String({
-    description: "Full markdown content to write to the output file",
+    description: "Markdown content for the current step's output section",
   }),
   outputFile: Type.Optional(
     Type.String({
@@ -27,17 +27,11 @@ export const parameters = Type.Object({
         "Output file path (absolute or relative to project root). Defaults to the workflow's configured output file.",
     })
   ),
-  append: Type.Optional(
-    Type.Boolean({
-      description:
-        "If true, append content to existing file instead of overwriting. Use for multi-step workflows where each step adds a section. Defaults to false.",
-    })
-  ),
 });
 
 export async function execute(
   _id: string,
-  params: { projectPath: string; content: string; outputFile?: string; append?: boolean }
+  params: { projectPath: string; content: string; outputFile?: string }
 ): Promise<ToolResult> {
   const { projectPath, content } = params;
 
@@ -69,7 +63,7 @@ export async function execute(
 
   // Safeguard: prevent double-save for the same step
   const active = state.activeWorkflow;
-  if (params.append && active) {
+  if (active) {
     if (active.lastSavedStep != null && active.lastSavedStep >= active.currentStep) {
       return text(
         `Error: Step ${active.currentStep} was already saved. ` +
@@ -81,25 +75,21 @@ export async function execute(
   // Ensure directory exists
   await mkdir(dirname(outputPath), { recursive: true });
 
-  // Write or append to the file
-  if (params.append) {
-    let existing = "";
-    try {
-      existing = await readFile(outputPath, "utf-8");
-    } catch {
-      // File doesn't exist yet, start fresh
-    }
+  // Read existing content (if any)
+  let existing = "";
+  try {
+    existing = await readFile(outputPath, "utf-8");
+  } catch {
+    // File doesn't exist yet, start fresh
+  }
 
-    // Safeguard: detect if content contains the existing text (LLM sent full doc instead of delta)
-    if (existing.length > 0 && content.includes(existing.trim())) {
-      // LLM sent the full accumulated document — use it as-is instead of appending
-      await writeFile(outputPath, content, "utf-8");
-    } else {
-      const separator = existing.length > 0 ? "\n\n" : "";
-      await writeFile(outputPath, existing + separator + content, "utf-8");
-    }
-  } else {
+  // Safeguard: detect if content contains the existing text (LLM sent full doc instead of delta)
+  if (existing.length > 0 && content.includes(existing.trim())) {
+    // LLM sent the full accumulated document — use it as-is instead of appending
     await writeFile(outputPath, content, "utf-8");
+  } else {
+    const separator = existing.length > 0 ? "\n\n" : "";
+    await writeFile(outputPath, existing + separator + content, "utf-8");
   }
 
   // Update active workflow output file reference and track saved step

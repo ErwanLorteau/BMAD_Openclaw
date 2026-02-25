@@ -111,8 +111,8 @@ export async function execute(
     "---",
     "",
     nextStep.nextStepFile
-      ? `**When complete:** Call \`bmad_save_artifact\` with \`append: true\` to add this step's output to the artifact, then \`bmad_load_step\` for the next step.`
-      : `**This is the final step.** Call \`bmad_save_artifact\` with \`append: true\` to save output, then \`bmad_complete_workflow\` to finalize.`,
+      ? `**When complete:** Call \`bmad_save_artifact\` to save this step's output, then \`bmad_load_step\` for the next step.`
+      : `**This is the final step.** Call \`bmad_save_artifact\` to save output, then \`bmad_complete_workflow\` to finalize.`,
   ];
 
   return text(output.join("\n"));

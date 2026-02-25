@@ -21,7 +21,7 @@ You are now executing a BMad workflow. Follow these rules EXACTLY.
 ### Step Processing Rules
 1. **READ COMPLETELY**: Read the entire step content before taking any action
 2. **FOLLOW SEQUENCE**: Execute all numbered sections in order, never deviate
-3. **SAVE STATE**: Call \`bmad_save_artifact\` with \`append: true\` when a step produces output (this adds to the artifact incrementally instead of overwriting previous steps)
+3. **SAVE STATE**: Call \`bmad_save_artifact\` when a step produces output (content is appended incrementally — each step adds its section)
 4. **LOAD NEXT**: When ready for the next step, call \`bmad_load_step\` — do NOT try to read step files directly
 
 ### Critical Rules (NO EXCEPTIONS)
