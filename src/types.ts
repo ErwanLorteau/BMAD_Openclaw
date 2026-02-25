@@ -40,6 +40,8 @@ export interface ActiveWorkflow {
   currentStepFile: string;
   /** Path to the workflow output file */
   outputFile: string;
+  /** Last step number that was saved (for duplicate-save protection) */
+  lastSavedStep?: number;
   /** ISO timestamp when workflow started */
   startedAt: string;
 }

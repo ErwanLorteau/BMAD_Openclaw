@@ -67,6 +67,17 @@ export async function execute(
     return text("Error: Content is empty. Cannot save an empty artifact.");
   }
 
+  // Safeguard: prevent double-save for the same step
+  const active = state.activeWorkflow;
+  if (params.append && active) {
+    if (active.lastSavedStep != null && active.lastSavedStep >= active.currentStep) {
+      return text(
+        `Error: Step ${active.currentStep} was already saved. ` +
+          `Call \`bmad_load_step\` to advance to the next step before saving again.`
+      );
+    }
+  }
+
   // Ensure directory exists
   await mkdir(dirname(outputPath), { recursive: true });
 
@@ -78,15 +89,23 @@ export async function execute(
     } catch {
       // File doesn't exist yet, start fresh
     }
-    const separator = existing.length > 0 ? "\n\n" : "";
-    await writeFile(outputPath, existing + separator + content, "utf-8");
+
+    // Safeguard: detect if content contains the existing text (LLM sent full doc instead of delta)
+    if (existing.length > 0 && content.includes(existing.trim())) {
+      // LLM sent the full accumulated document — use it as-is instead of appending
+      await writeFile(outputPath, content, "utf-8");
+    } else {
+      const separator = existing.length > 0 ? "\n\n" : "";
+      await writeFile(outputPath, existing + separator + content, "utf-8");
+    }
   } else {
     await writeFile(outputPath, content, "utf-8");
   }
 
-  // Update active workflow output file reference
-  if (state.activeWorkflow) {
-    state.activeWorkflow.outputFile = outputPath;
+  // Update active workflow output file reference and track saved step
+  if (active) {
+    active.outputFile = outputPath;
+    active.lastSavedStep = active.currentStep;
     await writeState(projectPath, state);
   }
 
