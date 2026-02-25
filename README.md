@@ -4,9 +4,6 @@ AI-driven agile development framework — the [BMad Method](https://github.com/b
 
 Your OpenClaw agent becomes a BMad Master, orchestrating the full software development lifecycle through structured workflows: analysis → planning → solutioning → implementation.
 
-<img width="1886" height="898" alt="image" src="https://github.com/user-attachments/assets/0867aa78-3c37-45c0-a832-f23f812c2458" />
-
-
 ## How It Works
 
 The plugin registers 7 agent tools that handle workflow orchestration, step-by-step execution, and artifact management. The master agent role-plays as different BMad personas (Analyst, PM, Architect, etc.) while the plugin manages state and step progression deterministically.
@@ -47,8 +44,7 @@ Add the following to your `~/.openclaw/openclaw.json`:
 {
   plugins: {
     load: {
-      paths: ["/home/ubuntu/.openclaw/extensions/bmad-method"]
-      // ⚠️ Use absolute path — tilde (~) may not resolve
+      paths: ["~/.openclaw/extensions/bmad-method"]
     },
     entries: {
       "bmad-method": {
@@ -63,19 +59,11 @@ Add the following to your `~/.openclaw/openclaw.json`:
   agents: {
     list: [
       {
-        // BMad Master agent — executes BMad workflows
+        // BMad Master as a top-level agent with BMad tools
         id: "bmad-master",
         name: "BMad Master",
         tools: {
-          allow: ["bmad-method"],  // Enable all BMad tools
-          deny: ["sessions_spawn"] // Force spawning through plugin
-        }
-      },
-      {
-        // Your main agent — needs permission to spawn bmad-master
-        id: "main",
-        subagents: {
-          allowAgents: ["main", "bmad-master"]
+          allow: ["bmad-method"]  // Enable all BMad tools
         }
       }
     ]
@@ -105,12 +93,9 @@ You should see:
 
 ## Usage
 
-1. **Ask your main agent** to spawn the BMad Master:
-   > "Spawn bmad-master to initialize a new project"
+1. **Start a chat with the BMad Master agent** — it has all 7 BMad tools and will guide you through the full workflow: analysis → planning → solutioning → implementation.
 
-2. **Talk directly to the BMad Master** session — it will guide you through the full BMad workflow: analysis → planning → solutioning → implementation.
-
-3. The BMad Master has access to all 7 tools and will orchestrate workflows, load agent personas, and manage artifacts automatically.
+2. The BMad Master role-plays as different personas (Analyst, PM, Architect, etc.) while the plugin manages state and step progression.
 
 ## Workflow
 

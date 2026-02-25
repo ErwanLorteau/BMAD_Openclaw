@@ -75,7 +75,7 @@ export async function execute(
     lines.push(`### ${phase.charAt(0).toUpperCase() + phase.slice(1)}`);
     for (const w of workflows) {
       const done = completedIds.includes(w.id) ? " ✅" : "";
-      lines.push(`- **${w.id}** — ${w.description}${done}`);
+      lines.push(`- **${w.name}** (\`${w.id}\`) — ${w.description}${done}`);
     }
     lines.push("");
   }
