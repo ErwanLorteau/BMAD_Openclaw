@@ -91,27 +91,41 @@ export async function execute(
   }
 
   // Load agent persona
-  const persona = await loadAgentPersona(context.bmadMethodPath, workflowDef.agentId);
+  let persona;
+  try {
+    persona = await loadAgentPersona(context.bmadMethodPath, workflowDef.agentId);
+  } catch (err: any) {
+    return text(`Error loading agent persona "${workflowDef.agentId}": ${err.message}`);
+  }
 
   // Load workflow file for context
   const workflowFilePath = join(context.bmadMethodPath, workflowDef.workflowFile);
-  const workflowContent = await readFile(workflowFilePath, "utf-8");
+  let workflowContent: string;
+  try {
+    workflowContent = await readFile(workflowFilePath, "utf-8");
+  } catch (err: any) {
+    return text(`Error loading workflow file "${workflowDef.workflowFile}": ${err.message}`);
+  }
 
   // Load first step
   let stepContent = "";
   let firstStepPath = "";
   let totalSteps: number | null = null;
 
-  if (workflowDef.stepsDir) {
-    const stepsDir = join(context.bmadMethodPath, workflowDef.stepsDir);
-    firstStepPath = await findFirstStep(stepsDir);
-    const step = await loadStepFile(firstStepPath);
-    stepContent = step.content;
-    totalSteps = await countSteps(stepsDir);
-  } else {
-    // Workflow without step files — use instructions from workflow YAML
-    stepContent = workflowContent;
-    firstStepPath = workflowFilePath;
+  try {
+    if (workflowDef.stepsDir) {
+      const stepsDir = join(context.bmadMethodPath, workflowDef.stepsDir);
+      firstStepPath = await findFirstStep(stepsDir);
+      const step = await loadStepFile(firstStepPath);
+      stepContent = step.content;
+      totalSteps = await countSteps(stepsDir);
+    } else {
+      // Workflow without step files — use instructions from workflow YAML
+      stepContent = workflowContent;
+      firstStepPath = workflowFilePath;
+    }
+  } catch (err: any) {
+    return text(`Error loading step files for "${workflowId}": ${err.message}`);
   }
 
   // Update state

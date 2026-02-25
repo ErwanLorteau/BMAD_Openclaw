@@ -4,20 +4,7 @@ AI-driven agile development framework — the [BMad Method](https://github.com/b
 
 Each workflow spawns a dedicated specialist agent (Analyst, PM, Architect, etc.) with fresh context — no bleeding between workflows. The BMad Master orchestrates the full software development lifecycle: analysis → planning → solutioning → implementation.
 
-<img width="1886" height="898" alt="image" src="https://github.com/user-attachments/assets/0867aa78-3c37-45c0-a832-f23f812c2458" />
-
-## Architecture
-
-```
-main (your personal assistant)
-  ↕ agent-to-agent messaging
-bmad-master (top-level agent, orchestrator)
-  ├→ analyst sub-agent    → Product Brief, Research
-  ├→ pm sub-agent         → PRD
-  ├→ ux sub-agent         → UX Design
-  ├→ architect sub-agent  → Architecture, Epics & Stories
-  └→ dev sub-agent        → Sprint Planning, Implementation
-```
+## How It Works
 
 **Why top-level?** OpenClaw sub-agents cannot spawn other sub-agents. bmad-master needs to spawn specialist agents, so it must be a [top-level agent](https://docs.openclaw.ai/concepts/multi-agent) — not a sub-agent of main.
 
@@ -68,14 +55,12 @@ Add to `~/.openclaw/openclaw.json`:
   agents: {
     list: [
       {
+        // BMad Master as a top-level agent with BMad tools
         id: "bmad-master",
         name: "BMad Master",
-        workspace: "~/.openclaw/workspace-bmad",
-        tools: { allow: ["bmad-method"] }
-      },
-      {
-        id: "main",
-        // your existing main agent config
+        tools: {
+          allow: ["bmad-method"]  // Enable all BMad tools
+        }
       }
     ]
   },
@@ -112,13 +97,9 @@ After restart, confirm the plugin loaded:
 
 ## Usage
 
-**YOLO mode** (autonomous):
-> "Tell bmad-master to initialize a project at ~/projects/my-app called my-app, then run create-product-brief in yolo mode"
+1. **Start a chat with the BMad Master agent** — it has all 7 BMad tools and will guide you through the full workflow: analysis → planning → solutioning → implementation.
 
-**Interactive mode**:
-> "Tell bmad-master to start create-prd for my-app in interactive mode"
-
-The master handles the rest — spawning the right agent, tracking state, proposing next workflows.
+2. The BMad Master role-plays as different personas (Analyst, PM, Architect, etc.) while the plugin manages state and step progression.
 
 ## Workflow
 

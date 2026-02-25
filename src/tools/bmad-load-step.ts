@@ -6,8 +6,8 @@
 
 import { Type } from "@sinclair/typebox";
 import { readState, writeState } from "../lib/state.ts";
-import { loadStepFile, resolveStepPath } from "../lib/step-loader.ts";
-import { join } from "node:path";
+import { loadStepFile, listStepFiles, resolveStepPath } from "../lib/step-loader.ts";
+import { join, dirname } from "node:path";
 import type { ToolResult } from "../types.ts";
 
 export const name = "bmad_load_step";
@@ -46,7 +46,19 @@ export async function execute(
   // Load current step to find the next step path
   const currentStep = await loadStepFile(active.currentStepFile);
 
-  if (!currentStep.nextStepFile) {
+  // Bug B fix: auto-discover next step if frontmatter has no nextStepFile
+  let nextStepFileValue = currentStep.nextStepFile;
+  if (!nextStepFileValue) {
+    const currentDir = dirname(active.currentStepFile);
+    const allSteps = await listStepFiles(currentDir);
+    const currentBasename = active.currentStepFile.split("/").pop() ?? "";
+    const currentIdx = allSteps.indexOf(currentBasename);
+    if (currentIdx >= 0 && currentIdx < allSteps.length - 1) {
+      nextStepFileValue = "./" + allSteps[currentIdx + 1];
+    }
+  }
+
+  if (!nextStepFileValue) {
     return text(
       `This is the final step of the "${active.id}" workflow.\n` +
         `Call \`bmad_complete_workflow\` to finalize.`
@@ -67,11 +79,20 @@ export async function execute(
     product_knowledge: join(projectPath, "docs"),
   };
 
-  let nextStepPath = resolveStepPath(currentStep.nextStepFile, vars);
+  let nextStepPath = resolveStepPath(nextStepFileValue, vars);
 
-  // If the path is relative to bmad method, make it absolute
+  // Bug A fix: resolve relative paths against current step's directory,
+  // not bmadMethodPath. Only fall back to bmadMethodPath for paths that
+  // look like bmm/ or core/ prefixed method-relative paths.
   if (!nextStepPath.startsWith("/")) {
-    nextStepPath = join(context.bmadMethodPath, nextStepPath);
+    if (nextStepPath.startsWith("./") || nextStepPath.startsWith("../")) {
+      nextStepPath = join(dirname(active.currentStepFile), nextStepPath);
+    } else if (nextStepPath.startsWith("bmm/") || nextStepPath.startsWith("core/")) {
+      nextStepPath = join(context.bmadMethodPath, nextStepPath);
+    } else {
+      // Default: resolve relative to current step directory
+      nextStepPath = join(dirname(active.currentStepFile), nextStepPath);
+    }
   }
 
   // Load the next step
