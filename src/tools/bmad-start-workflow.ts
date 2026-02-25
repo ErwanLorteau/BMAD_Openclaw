@@ -1,7 +1,8 @@
 /**
  * bmad_start_workflow — Start a BMad workflow.
  * Loads the agent persona + first step file + orchestrator rules.
- * Returns everything the master needs to role-play as the agent.
+ * Returns a task prompt for the master to pass to sessions_spawn.
+ * Also updates state.json with the active workflow.
  */
 
 import { Type } from "@sinclair/typebox";
@@ -20,7 +21,7 @@ import type { ToolResult } from "../types.ts";
 
 export const name = "bmad_start_workflow";
 export const description =
-  "Start a BMad workflow. Returns agent persona, orchestrator rules, and first step content for the master to execute.";
+  "Start a BMad workflow. Returns a task prompt to pass directly to sessions_spawn. Updates state.json with the active workflow.";
 
 export const parameters = Type.Object({
   projectPath: Type.String({
@@ -152,8 +153,20 @@ export async function execute(
     resolvedContent = resolvedContent.replaceAll(`{${key}}`, value);
   }
 
+  const interactiveInstructions = mode === "normal" ? `
+## Interactive Mode Rules
+After completing each step:
+1. Call \`bmad_save_artifact\` to save your output
+2. Present a summary of what you produced
+3. Say: "Step N complete. Awaiting your feedback before proceeding to step N+1."
+4. STOP and wait for user input before continuing
+5. When feedback arrives, incorporate it and continue to the next step via \`bmad_load_step\`
+` : "";
+
   const output = [
-    `# BMad Workflow: ${workflowDef.name}`,
+    `# BMad Workflow Agent: ${persona.name}`,
+    "",
+    `You are a dedicated workflow agent. Complete this workflow and stop.`,
     "",
     formatPersonaPrompt(persona),
     "",
@@ -161,14 +174,15 @@ export async function execute(
     "",
     ORCHESTRATOR_RULES,
     modeRules,
+    interactiveInstructions,
     "---",
     "",
     `## Workflow Context`,
     "",
-    `**Project:** ${state.projectName}`,
+    `**Project:** ${state.projectName} at \`${projectPath}\``,
     `**Workflow:** ${workflowDef.name} (${workflowId})`,
     `**Mode:** ${mode}`,
-    `**Step:** 1 of ${totalSteps ?? "unknown"}`,
+    `**Steps:** ${totalSteps ?? "unknown"}`,
     "",
     "---",
     "",
@@ -178,7 +192,9 @@ export async function execute(
     "",
     "---",
     "",
-    `**IMPORTANT:** When this step is complete, call \`bmad_save_artifact\` to save output, then call \`bmad_load_step\` to get the next step. Do NOT read step files directly.`,
+    `**After each step:** Call \`bmad_save_artifact\` with projectPath="${projectPath}" to save output, then \`bmad_load_step\` with projectPath="${projectPath}" for the next step.`,
+    `**Final step:** Call \`bmad_save_artifact\`, then \`bmad_complete_workflow\` with projectPath="${projectPath}".`,
+    `**Do NOT start additional workflows.** Complete this one and stop.`,
   ];
 
   return text(output.join("\n"));

@@ -4,12 +4,12 @@
  * Registers agent tools for BMad workflow orchestration.
  * The BMad Master agent calls these tools to execute workflows step-by-step.
  *
- * Architecture (Option B — single session):
- * - Master agent role-plays as BMad agents (Analyst, PM, Architect, etc.)
- * - Plugin tools handle step file loading, persona injection, state tracking
- * - No sub-agents — master does the actual execution
- * - YOLO mode auto-advances through steps
- * - Normal mode halts at checkpoints for user input
+ * Architecture (V3 — multi-agent):
+ * - BMad Master is a top-level agent that orchestrates workflows
+ * - Each workflow spawns a sub-agent (Analyst, PM, Architect, etc.)
+ * - Plugin tools handle step loading, persona injection, state tracking, artifact saving
+ * - YOLO mode: sub-agent runs autonomously
+ * - Interactive mode: sub-agent pauses per step for user feedback
  */
 
 import { join, dirname } from "node:path";
@@ -22,7 +22,6 @@ import * as bmadLoadStep from "./tools/bmad-load-step.ts";
 import * as bmadSaveArtifact from "./tools/bmad-save-artifact.ts";
 import * as bmadCompleteWorkflow from "./tools/bmad-complete-workflow.ts";
 import * as bmadGetState from "./tools/bmad-get-state.ts";
-
 /** All tool modules */
 const TOOLS = [
   bmadInitProject,
