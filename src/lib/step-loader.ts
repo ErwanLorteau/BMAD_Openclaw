@@ -54,8 +54,10 @@ export async function findFirstStep(stepsDir: string): Promise<string> {
  */
 export async function countSteps(stepsDir: string): Promise<number> {
   const files = await listStepFiles(stepsDir);
-  // Count only primary steps (step-01, step-02, etc.), not variants (step-01b)
-  return files.filter((f) => /^step-\d+[^b]/.test(f) || /^step-\d+\.md$/.test(f))
+  // Count only primary steps, not variants (step-01b, step-v-02b, etc.)
+  // Primary: step-01-foo.md, step-v-01-foo.md, step-e-01-foo.md
+  // Variant: step-01b-foo.md, step-v-02b-foo.md
+  return files.filter((f) => /^step-(?:[a-z]+-)?(\d+)(?:-|\.md$)/.test(f))
     .length;
 }
 
@@ -64,9 +66,12 @@ export async function countSteps(stepsDir: string): Promise<number> {
  * "step-01-init.md" → 1
  * "step-01b-continue.md" → 1
  * "step-12-complete.md" → 12
+ * "step-v-01-discovery.md" → 1
+ * "step-e-01-foo.md" → 1
  */
 function extractStepNumber(filename: string): number {
-  const match = filename.match(/^step-(\d+)/);
+  // Match step-01, step-v-01, step-e-01, step-c-01 etc.
+  const match = filename.match(/^step-(?:[a-z]+-)?(\d+)/);
   return match ? parseInt(match[1], 10) : 0;
 }
 
