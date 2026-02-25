@@ -80,6 +80,8 @@ export function resolveStepPath(
 ): string {
   let resolved = pathTemplate;
   for (const [key, value] of Object.entries(variables)) {
+    // Handle both {var} and {{var}} patterns (step files use both)
+    resolved = resolved.replaceAll(`{{${key}}}`, value);
     resolved = resolved.replaceAll(`{${key}}`, value);
   }
   return resolved;

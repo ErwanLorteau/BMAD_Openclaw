@@ -6,7 +6,7 @@
 
 import { Type } from "@sinclair/typebox";
 import { readState, writeState } from "../lib/state.ts";
-import { writeFile, mkdir } from "node:fs/promises";
+import { writeFile, readFile, mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import type { ToolResult } from "../types.ts";
 
@@ -27,11 +27,17 @@ export const parameters = Type.Object({
         "Output file path (absolute or relative to project root). Defaults to the workflow's configured output file.",
     })
   ),
+  append: Type.Optional(
+    Type.Boolean({
+      description:
+        "If true, append content to existing file instead of overwriting. Use for multi-step workflows where each step adds a section. Defaults to false.",
+    })
+  ),
 });
 
 export async function execute(
   _id: string,
-  params: { projectPath: string; content: string; outputFile?: string }
+  params: { projectPath: string; content: string; outputFile?: string; append?: boolean }
 ): Promise<ToolResult> {
   const { projectPath, content } = params;
 
@@ -64,8 +70,19 @@ export async function execute(
   // Ensure directory exists
   await mkdir(dirname(outputPath), { recursive: true });
 
-  // Write the file
-  await writeFile(outputPath, content, "utf-8");
+  // Write or append to the file
+  if (params.append) {
+    let existing = "";
+    try {
+      existing = await readFile(outputPath, "utf-8");
+    } catch {
+      // File doesn't exist yet, start fresh
+    }
+    const separator = existing.length > 0 ? "\n\n" : "";
+    await writeFile(outputPath, existing + separator + content, "utf-8");
+  } else {
+    await writeFile(outputPath, content, "utf-8");
+  }
 
   // Update active workflow output file reference
   if (state.activeWorkflow) {
